@@ -178,7 +178,7 @@ Color:  {{$['Filter'].data?.body?.error != nil ? "red" : "green"}}
 
 ## Open Questions
 
-1. Should the Display node support **multiple values** (i.e. a list of `{label, value, color}` rows)? Kept simple for V1 — single value only.
+1. ~~Should the Display node support **multiple values** (i.e. a list of `{label, value, color}` rows)?~~ **Resolved:** Single value only. No multi-row support.
 2. Should there be a **title** field separate from `value`? e.g. "Status: ✅ ok" vs just "✅ ok". Deferred to V1 feedback.
 3. Should the badge persist after the node is disconnected from a run (e.g. if you pause the node)? Proposal: yes, show last known value with a faded style.
 
