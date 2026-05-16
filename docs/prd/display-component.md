@@ -64,8 +64,8 @@ Introduce a **Display** action component that:
 
 | Field | Key | Type | Required | Description |
 |---|---|---|---|---|
-| Value | `value` | text (expression) | Yes | The value to display on the node. Supports `{{ }}` expression syntax. |
-| Color | `color` | text (expression) | No | Badge color. Supports `{{ }}` expressions. Resolves to a color name (see Color Values). Default: `gray`. |
+| Value | `value` | text (expression) | Yes | The value to display on the node. Uses text-field expression syntax: wrap each expression in `{{ }}`, e.g. `{{$['Node'].data.status}}`. |
+| Color | `color` | text (expression) | No | Badge color. Uses text-field expression syntax (`{{ }}`). Resolves to a color name (see Color Values). Ternary is supported: `{{$['Deploy'].data.success ? "green" : "red"}}`. Default: `gray`. |
 
 #### Color Values
 
