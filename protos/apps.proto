@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package Superplane.Apps;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/superplanehq/superplane/pkg/protos/apps";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Superplane Apps API";
+    version: "1.0";
+    description: "API for Superplane apps";
+    contact: {
+      name: "API Support";
+      email: "support@superplane.com";
+    };
+  };
+  schemes: HTTPS;
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+service Apps {
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/organizations/{organization_id}/apps"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List apps";
+      description: "Returns a list of all apps in an organization";
+      tags: "App";
+    };
+  }
+
+  rpc DescribeApp(DescribeAppRequest) returns (DescribeAppResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/organizations/{organization_id}/apps/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Describe app";
+      description: "Returns an app by ID";
+      tags: "App";
+    };
+  }
+
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/organizations/{organization_id}/apps"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create app";
+      description: "Creates a new app in an organization";
+      tags: "App";
+    };
+  }
+
+  rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/organizations/{organization_id}/apps/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Delete app";
+      description: "Deletes an existing app";
+      tags: "App";
+    };
+  }
+
+  rpc SyncApp(SyncAppRequest) returns (SyncAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/organizations/{organization_id}/apps/{id}/sync"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync app";
+      description: "Triggers a sync of the app's code storage to the canvas";
+      tags: "App";
+    };
+  }
+}
+
+message App {
+  message Metadata {
+    string id = 1;
+    string organization_id = 2;
+    string display_name = 3;
+    string slug = 4;
+    string description = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string created_by = 8;
+  }
+
+  message Spec {
+    string canvas_id = 1;
+    string code_storage_repo_id = 2;
+    string code_storage_remote_url = 3;
+    string default_branch = 4;
+  }
+
+  message Status {
+    string live_commit_sha = 1;
+    optional string edit_session_branch = 2;
+    string sync_status = 3;
+    optional string sync_error = 4;
+  }
+
+  Metadata metadata = 1;
+  Spec spec = 2;
+  Status status = 3;
+}
+
+message ListAppsRequest {
+  string organization_id = 1;
+}
+
+message ListAppsResponse {
+  repeated App apps = 1;
+}
+
+message DescribeAppRequest {
+  string organization_id = 1;
+  string id = 2;
+}
+
+message DescribeAppResponse {
+  App app = 1;
+}
+
+message CreateAppRequest {
+  string organization_id = 1;
+  App app = 2;
+}
+
+message CreateAppResponse {
+  App app = 1;
+}
+
+message DeleteAppRequest {
+  string organization_id = 1;
+  string id = 2;
+}
+
+message DeleteAppResponse {}
+
+message SyncAppRequest {
+  string organization_id = 1;
+  string id = 2;
+}
+
+message SyncAppResponse {
+  App app = 1;
+}
